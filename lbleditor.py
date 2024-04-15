@@ -95,7 +95,7 @@ class GUI:
             self.VerificationFail = 1
 
     def VerifyNumbers(self, NumEntry, error):
-            try:
+        try:
             int(NumEntry)
             if int(NumEntry) < 0:
                 FailOnPurpose = 10 / 0
@@ -122,6 +122,7 @@ class GUI:
             open("lbl_out.dta", "w+").write(f"{{new {self.DefaultUIComp.get()} {self.UILabelEntry.get()}.lbl}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set_showing {self.UILabelIsShowing_state.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set_text_token {self.TextTokenEntry.get()}}}")
+            open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set_text_size {self.TextSizeEntry.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.GroupEntry.get()}.grp add_object {self.UILabelEntry.get()}.lbl}}")
         else:
             return

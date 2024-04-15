@@ -13,6 +13,9 @@ class GUI:
         self.Root.title("Milo Label Editor")
         self.UILabelIsShowing_state = tk.IntVar()
         self.UIMarkup_state = tk.IntVar()
+        self.SkipLeading_state = tk.IntVar()
+        self.SkipKerning_state = tk.IntVar()
+        self.SkipItalics_state = tk.IntVar()
         self.VerificationFail = 0
 
         #the setup for the drop down menu
@@ -79,10 +82,10 @@ class GUI:
         self.AlignDesc = tk.Label(self.Root, text="Text alignment")
         self.CapsModeDesc = tk.Label(self.Root, text="Text case setting")
         self.MarkupDesc = tk.Label(self.Root, text="Support markup?")
-        self.LeadingDesc = tk.Label(self.Root, text="Space between lines")
-        self.KerningDesc = tk.Label(self.Root, text="Additional kerning applied to text object")
-        self.ItalicsDesc = tk.Label(self.Root, text="Italics for text object. Value must be between 1-100")
-        self.FitTypeDesc = tk.Label(self.Root, text="How to fit text in the width/height specified")
+        self.LeadingDesc = tk.Label(self.Root, text="Space between lines.\n Check the box to skip")
+        self.KerningDesc = tk.Label(self.Root, text="Additional kerning applied to text object.\n Check the box to skip")
+        self.ItalicsDesc = tk.Label(self.Root, text="Italics for text object. Value must be between 1-100.\n Check the box to skip")
+        self.FitTypeDesc = tk.Label(self.Root, text="How to fit text in the width/height specified.")
         self.GroupDesc = tk.Label(self.Root, text="What is the group the label should be added to.")
 
         #all the other shit
@@ -97,6 +100,10 @@ class GUI:
         self.LeadingEntry = tk.Entry(self.Root, width=7)
         self.KerningEntry = tk.Entry(self.Root, width=7)
         self.ItalicsEntry = tk.Entry(self.Root, width=7)
+        self.SkipLeading = tk.Checkbutton(self.Root, variable=self.SkipLeading_state)
+        self.SkipKerning = tk.Checkbutton(self.Root, variable=self.SkipKerning_state)
+        self.SkipItalics = tk.Checkbutton(self.Root, variable=self.SkipItalics_state)
+
         self.FitTypeEntry = tk.OptionMenu(self.Root, self.DefaultUIFitTypes, *self.UIFitTypeList)
 
 
@@ -119,8 +126,15 @@ class GUI:
         self.ItalicsDesc.grid(row=10, column=0, padx=10, pady=10)
         self.FitTypeDesc.grid(row=11, column=0, padx=10, pady=10)
 
-
         self.GroupDesc.grid(row=12, column=0, padx=10, pady=10)
+
+
+        #skipables
+        self.SkipLeading.grid(row=8, column=2, padx=10, pady=10)
+        self.SkipKerning.grid(row=9, column=2, padx=10, pady=10)
+        self.SkipItalics.grid(row=10, column=2, padx=10, pady=10)
+
+
 
         #run column 1 objects
         self.UILabelEntry.grid(row=0, column=1, pady=10)
@@ -196,9 +210,14 @@ class GUI:
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set allignment {self.DefaultUIAlign.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set caps_mode {self.DefaultUICaps.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set markup {self.UIMarkup_state.get()}}}")
-            open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set leading {self.LeadingEntry.get()}}}")
-            open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set kerning {self.KerningEntry.get()}}}")
-            open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set italics {self.ItalicsEntry.get()}}}")
+
+            if self.SkipLeading_state.get() == 0:
+                open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set leading {self.LeadingEntry.get()}}}")
+            if self.SkipKerning_state.get() == 0:
+                open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set kerning {self.KerningEntry.get()}}}")
+            if self.SkipItalics_state.get() == 0:
+                open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set italics {self.ItalicsEntry.get()}}}")
+
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set fit_type {self.DefaultUIFitTypes.get()}}}")
 
 

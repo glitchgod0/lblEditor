@@ -220,13 +220,9 @@ class GUI:
         self.Width_Print = self.WidthEntry.get()
         self.Height_Print = self.HeightEntry.get()
 
-
         self.VerifyData(self.UILabelEntry_Print, "Invalid LabelName")
         self.VerifyData(self.text_token_Print, "Invalid Text Token Name")
         self.VerifyNumbers(self.Text_Size_Print,"Invalid Text Size Value", 200)
-        self.VerifyData(self.GroupEntry_Print, "Invalid Group Name")
-        self.VerifyNumbers(self.Width_Print, "Invalid Width Value", 1000)
-        self.VerifyNumbers(self.Height_Print, "Invalid Height Value", 1000)
         
         if self.SkipLeading_state.get() == 0:
             self.VerifyNumbers(self.Leading_Print,"Invalid Leading Value", 1000)
@@ -236,6 +232,11 @@ class GUI:
             self.VerifyNumbers(self.Italics_Print,"Invalid Italics Value", 100)
         if self.SkipTruncText_state.get() == 0:
             self.VerifyString(self.TruncText_Print,"Invalid Trunk Text Value")
+        self.VerifyNumbers(self.Width_Print, "Invalid Width Value", 1000)
+        self.VerifyNumbers(self.Height_Print, "Invalid Height Value", 1000)
+       
+
+        self.VerifyData(self.GroupEntry_Print, "Invalid Group Name")
 
     def GenerateLabelCode(self):
         self.VerificationFail = 0

@@ -21,8 +21,25 @@ class GUI:
             "HamLabel"
         ]
 
+        self.UIAlignmentList = [
+           "kTopLeft",
+           "kTopCenter",
+           "kTopRight",
+           "kMiddleLeft",
+           "kMiddleCenter",
+           "kMiddleRight",
+           "kBottomLeft",
+           "kBottomCenter",
+           "kBottomRight",
+        ]
+
+
+        #dropdown init
         self.DefaultUIComp = tk.StringVar(self.Root)
+        self.DefaultUIAlign = tk.StringVar(self.Root)
+
         self.DefaultUIComp.set(self.UIComponentList[0]) 
+        self.DefaultUIAlign.set(self.UIAlignmentList[0]) 
 
         #shit for menu bar and the shit in it.
         self.MenuBar = tk.Menu(self.Root)
@@ -42,12 +59,14 @@ class GUI:
         self.ShowingDesc = tk.Label(self.Root, text="Set Showing?")
         self.TextTokenEntryDesc = tk.Label(self.Root, text="What token should be used for locale?")
         self.TextSizeDesc = tk.Label(self.Root, text="Text size in percentage of screen height (i.e. \n50% is half the screen height for the largest glyph)")
+        self.AlignDesc = tk.Label(self.Root, text="Text alignment")
         self.GroupDesc = tk.Label(self.Root, text="What is the group the label should be added to.")
 
 
         #all the other shit
         self.UILabelEntry = tk.Entry(self.Root, width=15)
         self.UIComponent = tk.OptionMenu(self.Root, self.DefaultUIComp, *self.UIComponentList)
+        self.UIAlignment = tk.OptionMenu(self.Root, self.DefaultUIAlign, *self.UIAlignmentList)
         self.UILabelIsShowing = tk.Checkbutton(self.Root, variable=self.UILabelIsShowing_state)
         self.TextTokenEntry = tk.Entry(self.Root, width=15)
         self.TextSizeEntry = tk.Entry(self.Root, width=7)
@@ -66,7 +85,8 @@ class GUI:
         self.ShowingDesc.grid(row=2, column=0, padx=10, pady=10)
         self.TextTokenEntryDesc.grid(row=3, column=0, padx=10, pady=10)
         self.TextSizeDesc.grid(row=4, column=0, padx=10, pady=10)
-        self.GroupDesc.grid(row=5, column=0, padx=10, pady=10)
+        self.AlignDesc.grid(row=5, column=0, padx=10, pady=10)
+        self.GroupDesc.grid(row=6, column=0, padx=10, pady=10)
 
         #run column 1 objects
         self.UILabelEntry.grid(row=0, column=1, pady=10)
@@ -74,14 +94,15 @@ class GUI:
         self.UILabelIsShowing.grid(row=2, column=1,padx=10, pady=10)
         self.TextTokenEntry.grid(row=3, column=1, padx=10, pady=10)
         self.TextSizeEntry.grid(row=4, column=1, padx=10, pady=10)
+        self.UIAlignment.grid(row=5, column=1)
 
-        self.GroupEntry.grid(row=5, column=1, pady=10)
-        self.GenerateButton.grid(row=6, column=1, padx=10, pady=10)
+        self.GroupEntry.grid(row=6, column=1, pady=10)
+        self.GenerateButton.grid(row=7, column=1, padx=10, pady=10)
 
         #run column 2 objects
         self.LabelNameLabel.grid(sticky="w", row=0, column=2, pady=10)
         self.TextSizePercent.grid(sticky="w",row=4, column=2, pady=10)  
-        self.GroupFileTypeLabel.grid(sticky="w",row=5, column=2, pady=10)
+        self.GroupFileTypeLabel.grid(sticky="w",row=6, column=2, pady=10)
 
         #run the code
         self.Root.mainloop()
@@ -123,6 +144,7 @@ class GUI:
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set_showing {self.UILabelIsShowing_state.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set_text_token {self.TextTokenEntry.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set_text_size {self.TextSizeEntry.get()}}}")
+            open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set allignment {self.DefaultUIAlign.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.GroupEntry.get()}.grp add_object {self.UILabelEntry.get()}.lbl}}")
         else:
             return

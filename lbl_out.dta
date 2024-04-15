@@ -1,0 +1,4 @@
+{new UILabel text.lbl}
+{text.lbl set_showing 1}
+{text.lbl set_text_token token}
+{tst.grp add_object text.lbl}

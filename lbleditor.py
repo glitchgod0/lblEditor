@@ -197,14 +197,13 @@ class GUI:
         else:
             return
 
-    def VerifyNumbers(self, Entry, error):
+    def VerifyNumbers(self, Entry, error, maxnum):
         try:
             int(Entry)
             if int(Entry) < 0:
                 FailOnPurpose = 10 / 0
-            if Entry == self.Italics_Print:
-                if int(Entry) > 100:
-                    FailOnPurpose = 10 / 0     
+            if int(Entry) > maxnum:
+                FailOnPurpose = 10 / 0     
         except (ZeroDivisionError, ValueError):
             messagebox.showerror("Error",error)
             self.VerificationFail = 1
@@ -224,17 +223,17 @@ class GUI:
 
         self.VerifyData(self.UILabelEntry_Print, "Invalid LabelName")
         self.VerifyData(self.text_token_Print, "Invalid Text Token Name")
-        self.VerifyNumbers(self.Text_Size_Print,"Invalid Text Size Value")
+        self.VerifyNumbers(self.Text_Size_Print,"Invalid Text Size Value", 200)
         self.VerifyData(self.GroupEntry_Print, "Invalid Group Name")
-        self.VerifyNumbers(self.Width_Print, "Invalid Width Value")
-        self.VerifyNumbers(self.Height_Print, "Invalid Height Value")
+        self.VerifyNumbers(self.Width_Print, "Invalid Width Value", 1000)
+        self.VerifyNumbers(self.Height_Print, "Invalid Height Value", 1000)
         
         if self.SkipLeading_state.get() == 0:
-            self.VerifyNumbers(self.Leading_Print,"Invalid Leading Value")
+            self.VerifyNumbers(self.Leading_Print,"Invalid Leading Value", 1000)
         if self.SkipKerning_state.get() == 0:
-            self.VerifyNumbers(self.Kerning_Print,"Invalid Kerning Value")
+            self.VerifyNumbers(self.Kerning_Print,"Invalid Kerning Value", 1000)
         if self.SkipItalics_state.get() == 0:
-            self.VerifyNumbers(self.Italics_Print,"Invalid Italics Value")
+            self.VerifyNumbers(self.Italics_Print,"Invalid Italics Value", 100)
         if self.SkipTruncText_state.get() == 0:
             self.VerifyString(self.TruncText_Print,"Invalid Trunk Text Value")
 

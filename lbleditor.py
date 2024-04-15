@@ -179,11 +179,11 @@ class GUI:
 
     def VerifyString(self, Entry, error):
         print(Entry)
-        if re.search(r'[()\[\]{}"\'`]', Entry):
-            return
-        else:
+        if re.findall(r'[{}()\[\]\'"]', Entry):
             messagebox.showerror("Error",error)
-            self.VerificationFail = 1
+            self.VerificationFail = 1  
+        else:
+            return
 
     def VerifyNumbers(self, Entry, error):
         try:
@@ -215,7 +215,7 @@ class GUI:
         self.VerifyNumbers(self.Leading_Print,"Invalid Leading Value")
         self.VerifyNumbers(self.Kerning_Print,"Invalid Kerning Value")
         self.VerifyNumbers(self.Italics_Print,"Invalid Italics Value")
-        #self.VerifyString(self.TruncText_Print,"Invalid Trunk Text Value")
+        self.VerifyString(self.TruncText_Print,"Invalid Trunk Text Value")
 
     def GenerateLabelCode(self):
         self.VerificationFail = 0
@@ -238,7 +238,7 @@ class GUI:
 
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set fit_type {self.DefaultUIFitTypes.get()}}}")
             if self.SkipTruncText_state.get() == 0:
-                open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set preserve_trunc_text \"{self.TruncTextEntry.get()} \"}}")
+                open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set preserve_trunc_text \"{self.TruncTextEntry.get()}\"}}")
 
             open("lbl_out.dta", "a").write(f"\n{{{self.GroupEntry.get()}.grp add_object {self.UILabelEntry.get()}.lbl}}")
         else:

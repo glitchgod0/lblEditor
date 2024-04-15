@@ -90,6 +90,7 @@ class GUI:
         self.TruncTextDesc = tk.Label(self.Root, text="text to append after truncation with kFitEllipsis\n Check the box to skip")
         self.WidthDesc = tk.Label(self.Root, text="Width of label")
         self.HeightDesc = tk.Label(self.Root, text="Height of label")
+        self.AlphaDesc = tk.Label(self.Root, text="Controls transparency of label. Value must be between 0-1.")
 
 
 
@@ -116,6 +117,7 @@ class GUI:
         self.SkipTruncText = tk.Checkbutton(self.Root, variable=self.SkipTruncText_state)
         self.WidthEntry = tk.Entry(self.Root, width=7)
         self.HeightEntry = tk.Entry(self.Root, width=7)
+        self.AlphaEntry = tk.Entry(self.Root, width=7)
 
 
 
@@ -141,8 +143,9 @@ class GUI:
         self.TruncTextDesc.grid(row=12, column=0, padx=10, pady=10)
         self.WidthDesc.grid(row=13, column=0, padx=10, pady=10)
         self.HeightDesc.grid(row=14, column=0, padx=10, pady=10)
+        self.AlphaDesc.grid(row=15, column=0, padx=10, pady=10)
 
-        self.GroupDesc.grid(row=15, column=0, padx=10, pady=10)
+        self.GroupDesc.grid(row=16, column=0, padx=10, pady=10)
 
 
 
@@ -164,14 +167,15 @@ class GUI:
         self.TruncTextEntry.grid(row=12, column=1, padx=10, pady=10)
         self.WidthEntry.grid(row=13, column=1, padx=10, pady=10)
         self.HeightEntry.grid(row=14, column=1, padx=10, pady=10)
+        self.AlphaEntry.grid(row=15, column=1, padx=10, pady=10)
 
 
-        self.GroupEntry.grid(row=15, column=1, pady=10, padx=10)
+        self.GroupEntry.grid(row=16, column=1, pady=10, padx=10)
 
         #run column 2 objects
         self.LabelNameLabel.grid(sticky="w", row=0, column=2, pady=10)
         self.TextSizePercent.grid(sticky="w",row=4, column=2, pady=10)  
-        self.GroupFileTypeLabel.grid(sticky="w",row=15, column=2, pady=10) # .GRP LABEL
+        self.GroupFileTypeLabel.grid(sticky="w",row=16, column=2, pady=10) # .GRP LABEL
         #skipables
         self.SkipLeading.grid(row=8, column=2, padx=10, pady=10)
         self.SkipKerning.grid(row=9, column=2, padx=10, pady=10)
@@ -219,6 +223,7 @@ class GUI:
         self.TruncText_Print = self.TruncTextEntry.get()
         self.Width_Print = self.WidthEntry.get()
         self.Height_Print = self.HeightEntry.get()
+        self.Alpha_Print = self.AlphaEntry.get()
 
         self.VerifyData(self.UILabelEntry_Print, "Invalid LabelName")
         self.VerifyData(self.text_token_Print, "Invalid Text Token Name")
@@ -234,6 +239,7 @@ class GUI:
             self.VerifyString(self.TruncText_Print,"Invalid Trunk Text Value")
         self.VerifyNumbers(self.Width_Print, "Invalid Width Value", 1000)
         self.VerifyNumbers(self.Height_Print, "Invalid Height Value", 1000)
+        self.VerifyNumbers(self.Alpha_Print, "Invalid Alpha Value", 1)
        
 
         self.VerifyData(self.GroupEntry_Print, "Invalid Group Name")
@@ -261,7 +267,8 @@ class GUI:
             if self.SkipTruncText_state.get() == 0:
                 open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set preserve_trunc_text \"{self.TruncTextEntry.get()}\"}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set width {self.WidthEntry.get()}}}")
-            open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set width {self.HeightEntry.get()}}}")
+            open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set height {self.HeightEntry.get()}}}")
+            open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set alpha {self.AlphaEntry.get()}}}")
             
 
             open("lbl_out.dta", "a").write(f"\n{{{self.GroupEntry.get()}.grp add_object {self.UILabelEntry.get()}.lbl}}")

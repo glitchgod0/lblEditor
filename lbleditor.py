@@ -106,7 +106,7 @@ class GUI:
         self.SkipKerning = tk.Checkbutton(self.Root, variable=self.SkipKerning_state)
         self.SkipItalics = tk.Checkbutton(self.Root, variable=self.SkipItalics_state)
         self.FitTypeEntry = tk.OptionMenu(self.Root, self.DefaultUIFitTypes, *self.UIFitTypeList)
-        self.TruncTextEntry = tk.Entry(self.Root, width=7)
+        self.TruncTextEntry = tk.Entry(self.Root, width=15)
         self.SkipTruncText = tk.Checkbutton(self.Root, variable=self.SkipTruncText_state)
 
 
@@ -170,22 +170,29 @@ class GUI:
         self.Root.mainloop()
 
 
-    def VerifyData(self, string, error):
-        if re.match(r'^[A-Za-z_]+$', string):
+    def VerifyData(self, Entry, error):
+        if re.match(r'^[A-Za-z_]+$', Entry):
             return
         else:
             messagebox.showerror("Error",error)
             self.VerificationFail = 1
 
-    def VerifyNumbers(self, NumEntry, error):
-        try:
-            int(NumEntry)
-            if int(NumEntry) < 0:
-                FailOnPurpose = 10 / 0
-            if NumEntry == self.Italics_Print:
-                if int(NumEntry) > 100:
-                    FailOnPurpose = 10 / 0            
+    def VerifyString(self, Entry, error):
+        print(Entry)
+        if re.search(r'[()\[\]{}"\'`]', Entry):
             return
+        else:
+            messagebox.showerror("Error",error)
+            self.VerificationFail = 1
+
+    def VerifyNumbers(self, Entry, error):
+        try:
+            int(Entry)
+            if int(Entry) < 0:
+                FailOnPurpose = 10 / 0
+            if Entry == self.Italics_Print:
+                if int(Entry) > 100:
+                    FailOnPurpose = 10 / 0     
         except (ZeroDivisionError, ValueError):
             messagebox.showerror("Error",error)
             self.VerificationFail = 1
@@ -198,14 +205,17 @@ class GUI:
         self.Leading_Print = self.LeadingEntry.get()
         self.Kerning_Print = self.KerningEntry.get()
         self.Italics_Print = self.ItalicsEntry.get()
+        self.TruncText_Print = self.TruncTextEntry.get()
 
         self.VerifyData(self.UILabelEntry_Print, "Invalid LabelName")
         self.VerifyData(self.text_token_Print, "Invalid Text Token Name")
         self.VerifyNumbers(self.Text_Size_Print,"Invalid Text Size Value")
-        self.VerifyNumbers(self.Leading_Print,"Invalid Leading Value")
-        self.VerifyNumbers(self.Kerning_Print,"Invalid Leading Value")
-        self.VerifyNumbers(self.Italics_Print,"Invalid Italics Value")
         self.VerifyData(self.GroupEntry_Print, "Invalid Group Name")
+        
+        self.VerifyNumbers(self.Leading_Print,"Invalid Leading Value")
+        self.VerifyNumbers(self.Kerning_Print,"Invalid Kerning Value")
+        self.VerifyNumbers(self.Italics_Print,"Invalid Italics Value")
+        #self.VerifyString(self.TruncText_Print,"Invalid Trunk Text Value")
 
     def GenerateLabelCode(self):
         self.VerificationFail = 0
@@ -228,7 +238,7 @@ class GUI:
 
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set fit_type {self.DefaultUIFitTypes.get()}}}")
             if self.SkipTruncText_state.get() == 0:
-                open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set preserve_trunc_text {self.TruncTextEntry.get()}}}")
+                open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set preserve_trunc_text \"{self.TruncTextEntry.get()} \"}}")
 
             open("lbl_out.dta", "a").write(f"\n{{{self.GroupEntry.get()}.grp add_object {self.UILabelEntry.get()}.lbl}}")
         else:

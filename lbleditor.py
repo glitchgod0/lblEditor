@@ -70,8 +70,9 @@ class GUI:
         self.AlignDesc = tk.Label(self.Root, text="Text alignment")
         self.CapsModeDesc = tk.Label(self.Root, text="Text case setting")
         self.MarkupDesc = tk.Label(self.Root, text="Support markup?")
-        self.LeadingDesc = tk.Label(self.Root, text="Leading: Space between lines")
-        self.KerningDesc = tk.Label(self.Root, text="Kerning: Additional kerning applied to text object")
+        self.LeadingDesc = tk.Label(self.Root, text="Space between lines")
+        self.KerningDesc = tk.Label(self.Root, text="Additional kerning applied to text object")
+        self.ItalicsDesc = tk.Label(self.Root, text="Italics for text object. Value must be between 1-100")
         self.GroupDesc = tk.Label(self.Root, text="What is the group the label should be added to.")
 
         #all the other shit
@@ -85,6 +86,7 @@ class GUI:
         self.UIMarkup = tk.Checkbutton(self.Root, variable=self.UIMarkup_state)
         self.LeadingEntry = tk.Entry(self.Root, width=7)
         self.KerningEntry = tk.Entry(self.Root, width=7)
+        self.ItalicsEntry = tk.Entry(self.Root, width=7)
 
 
 
@@ -103,7 +105,10 @@ class GUI:
         self.MarkupDesc.grid(row=7, column=0, padx=10, pady=10)
         self.LeadingDesc.grid(row=8, column=0, padx=10, pady=10)
         self.KerningDesc.grid(row=9, column=0, padx=10, pady=10)
-        self.GroupDesc.grid(row=10, column=0, padx=10, pady=10)
+        self.ItalicsDesc.grid(row=10, column=0, padx=10, pady=10)
+
+
+        self.GroupDesc.grid(row=11, column=0, padx=10, pady=10)
 
         #run column 1 objects
         self.UILabelEntry.grid(row=0, column=1, pady=10)
@@ -116,14 +121,15 @@ class GUI:
         self.UIMarkup.grid(row=7, column=1)
         self.LeadingEntry.grid(row=8, column=1, padx=10, pady=10)
         self.KerningEntry.grid(row=9, column=1, padx=10, pady=10)
+        self.ItalicsEntry.grid(row=10, column=1, padx=10, pady=10)
 
 
-        self.GroupEntry.grid(row=10, column=1, pady=10)
+        self.GroupEntry.grid(row=11, column=1, pady=10)
 
         #run column 2 objects
         self.LabelNameLabel.grid(sticky="w", row=0, column=2, pady=10)
         self.TextSizePercent.grid(sticky="w",row=4, column=2, pady=10)  
-        self.GroupFileTypeLabel.grid(sticky="w",row=10, column=2, pady=10)
+        self.GroupFileTypeLabel.grid(sticky="w",row=11, column=2, pady=10)
 
         #run the code
         self.Root.mainloop()
@@ -141,6 +147,9 @@ class GUI:
             int(NumEntry)
             if int(NumEntry) < 0:
                 FailOnPurpose = 10 / 0
+            if NumEntry == self.Italics_Print:
+                if int(NumEntry) > 100:
+                    FailOnPurpose = 10 / 0            
             return
         except (ZeroDivisionError, ValueError):
             messagebox.showerror("Error",error)
@@ -153,12 +162,14 @@ class GUI:
         self.Text_Size_Print = self.TextSizeEntry.get()
         self.Leading_Print = self.LeadingEntry.get()
         self.Kerning_Print = self.KerningEntry.get()
+        self.Italics_Print = self.ItalicsEntry.get()
 
         self.VerifyData(self.UILabelEntry_Print, "Invalid LabelName")
         self.VerifyData(self.text_token_Print, "Invalid Text Token Name")
         self.VerifyNumbers(self.Text_Size_Print,"Invalid Text Size Value")
         self.VerifyNumbers(self.Leading_Print,"Invalid Leading Value")
         self.VerifyNumbers(self.Kerning_Print,"Invalid Leading Value")
+        self.VerifyNumbers(self.Italics_Print,"Invalid Italics Value")
         self.VerifyData(self.GroupEntry_Print, "Invalid Group Name")
 
     def GenerateLabelCode(self):
@@ -174,6 +185,7 @@ class GUI:
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set markup {self.UIMarkup_state.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set leading {self.LeadingEntry.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set kerning {self.KerningEntry.get()}}}")
+            open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set italics {self.ItalicsEntry.get()}}}")
 
             open("lbl_out.dta", "a").write(f"\n{{{self.GroupEntry.get()}.grp add_object {self.UILabelEntry.get()}.lbl}}")
         else:

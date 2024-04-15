@@ -16,6 +16,7 @@ class GUI:
         self.SkipLeading_state = tk.IntVar()
         self.SkipKerning_state = tk.IntVar()
         self.SkipItalics_state = tk.IntVar()
+        self.SkipTruncText_state = tk.IntVar()
         self.VerificationFail = 0
 
         #the setup for the drop down menu
@@ -86,6 +87,7 @@ class GUI:
         self.KerningDesc = tk.Label(self.Root, text="Additional kerning applied to text object.\n Check the box to skip")
         self.ItalicsDesc = tk.Label(self.Root, text="Italics for text object. Value must be between 1-100.\n Check the box to skip")
         self.FitTypeDesc = tk.Label(self.Root, text="How to fit text in the width/height specified.")
+        self.TruncTextDesc = tk.Label(self.Root, text="text to append after truncation with kFitEllipsis\n Check the box to skip")
         self.GroupDesc = tk.Label(self.Root, text="What is the group the label should be added to.")
 
         #all the other shit
@@ -103,8 +105,11 @@ class GUI:
         self.SkipLeading = tk.Checkbutton(self.Root, variable=self.SkipLeading_state)
         self.SkipKerning = tk.Checkbutton(self.Root, variable=self.SkipKerning_state)
         self.SkipItalics = tk.Checkbutton(self.Root, variable=self.SkipItalics_state)
-
         self.FitTypeEntry = tk.OptionMenu(self.Root, self.DefaultUIFitTypes, *self.UIFitTypeList)
+        self.TruncTextEntry = tk.Entry(self.Root, width=7)
+        self.SkipTruncText = tk.Checkbutton(self.Root, variable=self.SkipTruncText_state)
+
+
 
 
 
@@ -125,14 +130,11 @@ class GUI:
         self.KerningDesc.grid(row=9, column=0, padx=10, pady=10)
         self.ItalicsDesc.grid(row=10, column=0, padx=10, pady=10)
         self.FitTypeDesc.grid(row=11, column=0, padx=10, pady=10)
+        self.TruncTextDesc.grid(row=12, column=0, padx=10, pady=10)
 
-        self.GroupDesc.grid(row=12, column=0, padx=10, pady=10)
+        self.GroupDesc.grid(row=13, column=0, padx=10, pady=10)
 
 
-        #skipables
-        self.SkipLeading.grid(row=8, column=2, padx=10, pady=10)
-        self.SkipKerning.grid(row=9, column=2, padx=10, pady=10)
-        self.SkipItalics.grid(row=10, column=2, padx=10, pady=10)
 
 
 
@@ -149,14 +151,20 @@ class GUI:
         self.KerningEntry.grid(row=9, column=1, padx=10, pady=10)
         self.ItalicsEntry.grid(row=10, column=1, padx=10, pady=10)
         self.FitTypeEntry.grid(row=11, column=1, padx=10, pady=10)
+        self.TruncTextEntry.grid(row=12, column=1, padx=10, pady=10)
 
 
-        self.GroupEntry.grid(row=12, column=1, pady=10, padx=10)
+        self.GroupEntry.grid(row=13, column=1, pady=10, padx=10)
 
         #run column 2 objects
         self.LabelNameLabel.grid(sticky="w", row=0, column=2, pady=10)
         self.TextSizePercent.grid(sticky="w",row=4, column=2, pady=10)  
-        self.GroupFileTypeLabel.grid(sticky="w",row=12, column=2, pady=10)
+        self.GroupFileTypeLabel.grid(sticky="w",row=13, column=2, pady=10)
+        #skipables
+        self.SkipLeading.grid(row=8, column=2, padx=10, pady=10)
+        self.SkipKerning.grid(row=9, column=2, padx=10, pady=10)
+        self.SkipItalics.grid(row=10, column=2, padx=10, pady=10)
+        self.SkipTruncText.grid(row=12, column=2, padx=10, pady=10)
 
         #run the code
         self.Root.mainloop()
@@ -219,7 +227,8 @@ class GUI:
                 open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set italics {self.ItalicsEntry.get()}}}")
 
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set fit_type {self.DefaultUIFitTypes.get()}}}")
-
+            if self.SkipTruncText_state.get() == 0:
+                open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set preserve_trunc_text {self.TruncTextEntry.get()}}}")
 
             open("lbl_out.dta", "a").write(f"\n{{{self.GroupEntry.get()}.grp add_object {self.UILabelEntry.get()}.lbl}}")
         else:

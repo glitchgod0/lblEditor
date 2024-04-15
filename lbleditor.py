@@ -39,15 +39,24 @@ class GUI:
           "kForceUpper"
         ]
 
+        self.UIFitTypeList = [
+          "kFitWrap",
+          "kFitJust",
+          "kFitEllipsis"
+        ]
+
+
 
         #dropdown init
         self.DefaultUIComp = tk.StringVar(self.Root)
         self.DefaultUIAlign = tk.StringVar(self.Root)
         self.DefaultUICaps = tk.StringVar(self.Root)
+        self.DefaultUIFitTypes = tk.StringVar(self.Root)
 
         self.DefaultUIComp.set(self.UIComponentList[0]) 
         self.DefaultUIAlign.set(self.UIAlignmentList[0]) 
         self.DefaultUICaps.set(self.UICapsModeList[0]) 
+        self.DefaultUIFitTypes.set(self.UIFitTypeList[0]) 
 
         #shit for menu bar and the shit in it.
         self.MenuBar = tk.Menu(self.Root)
@@ -73,6 +82,7 @@ class GUI:
         self.LeadingDesc = tk.Label(self.Root, text="Space between lines")
         self.KerningDesc = tk.Label(self.Root, text="Additional kerning applied to text object")
         self.ItalicsDesc = tk.Label(self.Root, text="Italics for text object. Value must be between 1-100")
+        self.FitTypeDesc = tk.Label(self.Root, text="How to fit text in the width/height specified")
         self.GroupDesc = tk.Label(self.Root, text="What is the group the label should be added to.")
 
         #all the other shit
@@ -87,6 +97,7 @@ class GUI:
         self.LeadingEntry = tk.Entry(self.Root, width=7)
         self.KerningEntry = tk.Entry(self.Root, width=7)
         self.ItalicsEntry = tk.Entry(self.Root, width=7)
+        self.FitTypeEntry = tk.OptionMenu(self.Root, self.DefaultUIFitTypes, *self.UIFitTypeList)
 
 
 
@@ -106,9 +117,10 @@ class GUI:
         self.LeadingDesc.grid(row=8, column=0, padx=10, pady=10)
         self.KerningDesc.grid(row=9, column=0, padx=10, pady=10)
         self.ItalicsDesc.grid(row=10, column=0, padx=10, pady=10)
+        self.FitTypeDesc.grid(row=11, column=0, padx=10, pady=10)
 
 
-        self.GroupDesc.grid(row=11, column=0, padx=10, pady=10)
+        self.GroupDesc.grid(row=12, column=0, padx=10, pady=10)
 
         #run column 1 objects
         self.UILabelEntry.grid(row=0, column=1, pady=10)
@@ -122,14 +134,15 @@ class GUI:
         self.LeadingEntry.grid(row=8, column=1, padx=10, pady=10)
         self.KerningEntry.grid(row=9, column=1, padx=10, pady=10)
         self.ItalicsEntry.grid(row=10, column=1, padx=10, pady=10)
+        self.FitTypeEntry.grid(row=11, column=1, padx=10, pady=10)
 
 
-        self.GroupEntry.grid(row=11, column=1, pady=10)
+        self.GroupEntry.grid(row=12, column=1, pady=10, padx=10)
 
         #run column 2 objects
         self.LabelNameLabel.grid(sticky="w", row=0, column=2, pady=10)
         self.TextSizePercent.grid(sticky="w",row=4, column=2, pady=10)  
-        self.GroupFileTypeLabel.grid(sticky="w",row=11, column=2, pady=10)
+        self.GroupFileTypeLabel.grid(sticky="w",row=12, column=2, pady=10)
 
         #run the code
         self.Root.mainloop()
@@ -186,6 +199,8 @@ class GUI:
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set leading {self.LeadingEntry.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set kerning {self.KerningEntry.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set italics {self.ItalicsEntry.get()}}}")
+            open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set fit_type {self.DefaultUIFitTypes.get()}}}")
+
 
             open("lbl_out.dta", "a").write(f"\n{{{self.GroupEntry.get()}.grp add_object {self.UILabelEntry.get()}.lbl}}")
         else:

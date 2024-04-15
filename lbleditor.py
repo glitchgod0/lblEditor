@@ -93,9 +93,6 @@ class GUI:
         self.VerifyData(self.GroupEntry_Print, "Invalid Group Name")
         self.VerifyData(self.text_token_Print, "Invalid Text Token Name")
 
-
-
-
     def GenerateLabelCode(self):
         self.VerificationFail = 0
         self.PullData()

@@ -52,8 +52,8 @@ class GUI:
         #shit for menu bar and the shit in it.
         self.MenuBar = tk.Menu(self.Root)
         self.FileMenu = tk.Menu(self.MenuBar, tearoff=0)
-        self.FileMenu.add_command(label="Exit", command=exit)
-        self.MenuBar.add_cascade(menu=self.FileMenu,label="File")
+        self.FileMenu.add_command(label="Make Script", command=self.GenerateLabelCode)
+        self.MenuBar.add_cascade(menu=self.FileMenu,label="Export Options")
 
         self.Root.config(menu=self.MenuBar)
 
@@ -69,8 +69,9 @@ class GUI:
         self.TextSizeDesc = tk.Label(self.Root, text="Text size in percentage of screen height (i.e. \n50% is half the screen height for the largest glyph)")
         self.AlignDesc = tk.Label(self.Root, text="Text alignment")
         self.CapsModeDesc = tk.Label(self.Root, text="Text case setting")
-        self.GroupDesc = tk.Label(self.Root, text="What is the group the label should be added to.")
         self.MarkupDesc = tk.Label(self.Root, text="Support markup?")
+        self.LeadingDesc = tk.Label(self.Root, text="Leading: Space between lines")
+        self.GroupDesc = tk.Label(self.Root, text="What is the group the label should be added to.")
 
         #all the other shit
         self.UILabelEntry = tk.Entry(self.Root, width=15)
@@ -81,13 +82,13 @@ class GUI:
         self.UIAlignment = tk.OptionMenu(self.Root, self.DefaultUIAlign, *self.UIAlignmentList)
         self.UICapsMode = tk.OptionMenu(self.Root, self.DefaultUICaps, *self.UICapsModeList)
         self.UIMarkup = tk.Checkbutton(self.Root, variable=self.UIMarkup_state)
+        self.LeadingEntry = tk.Entry(self.Root, width=7)
 
 
 
 
-        self.GroupEntry = tk.Entry(self.Root, width=15)
-        self.GenerateButton = tk.Button(self.Root, text="Generate Script", command=self.GenerateLabelCode)
-        
+
+        self.GroupEntry = tk.Entry(self.Root, width=15)        
 
         #run column 0 objects
         self.NameDesc.grid(row=0, column=0, padx=10, pady=10)
@@ -98,7 +99,8 @@ class GUI:
         self.AlignDesc.grid(row=5, column=0, padx=10, pady=10)
         self.CapsModeDesc.grid(row=6, column=0, padx=10, pady=10)
         self.MarkupDesc.grid(row=7, column=0, padx=10, pady=10)
-        self.GroupDesc.grid(row=8, column=0, padx=10, pady=10)
+        self.LeadingDesc.grid(row=8, column=0, padx=10, pady=10)
+        self.GroupDesc.grid(row=9, column=0, padx=10, pady=10)
 
         #run column 1 objects
         self.UILabelEntry.grid(row=0, column=1, pady=10)
@@ -109,14 +111,15 @@ class GUI:
         self.UIAlignment.grid(row=5, column=1)
         self.UICapsMode.grid(row=6, column=1)
         self.UIMarkup.grid(row=7, column=1)
+        self.LeadingEntry.grid(row=8, column=1, padx=10, pady=10)
 
-        self.GroupEntry.grid(row=8, column=1, pady=10)
-        self.GenerateButton.grid(row=9, column=1, padx=10, pady=10)
+
+        self.GroupEntry.grid(row=9, column=1, pady=10)
 
         #run column 2 objects
         self.LabelNameLabel.grid(sticky="w", row=0, column=2, pady=10)
         self.TextSizePercent.grid(sticky="w",row=4, column=2, pady=10)  
-        self.GroupFileTypeLabel.grid(sticky="w",row=8, column=2, pady=10)
+        self.GroupFileTypeLabel.grid(sticky="w",row=9, column=2, pady=10)
 
         #run the code
         self.Root.mainloop()
@@ -144,10 +147,12 @@ class GUI:
         self.GroupEntry_Print = self.GroupEntry.get()
         self.text_token_Print = self.TextTokenEntry.get()
         self.Text_Size_Print = self.TextSizeEntry.get()
+        self.Leading_Print = self.LeadingEntry.get()
 
         self.VerifyData(self.UILabelEntry_Print, "Invalid LabelName")
         self.VerifyData(self.text_token_Print, "Invalid Text Token Name")
         self.VerifyNumbers(self.Text_Size_Print,"Invalid Text Size Value")
+        self.VerifyNumbers(self.Leading_Print,"Invalid Leading Value")
         self.VerifyData(self.GroupEntry_Print, "Invalid Group Name")
 
     def GenerateLabelCode(self):
@@ -161,6 +166,8 @@ class GUI:
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set allignment {self.DefaultUIAlign.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set caps_mode {self.DefaultUICaps.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set markup {self.UIMarkup_state.get()}}}")
+            open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set leading {self.LeadingEntry.get()}}}")
+
             open("lbl_out.dta", "a").write(f"\n{{{self.GroupEntry.get()}.grp add_object {self.UILabelEntry.get()}.lbl}}")
         else:
             return

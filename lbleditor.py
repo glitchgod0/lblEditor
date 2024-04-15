@@ -229,10 +229,14 @@ class GUI:
         self.VerifyNumbers(self.Width_Print, "Invalid Width Value")
         self.VerifyNumbers(self.Height_Print, "Invalid Height Value")
         
-        self.VerifyNumbers(self.Leading_Print,"Invalid Leading Value")
-        self.VerifyNumbers(self.Kerning_Print,"Invalid Kerning Value")
-        self.VerifyNumbers(self.Italics_Print,"Invalid Italics Value")
-        self.VerifyString(self.TruncText_Print,"Invalid Trunk Text Value")
+        if self.SkipLeading_state.get() == 0:
+            self.VerifyNumbers(self.Leading_Print,"Invalid Leading Value")
+        if self.SkipKerning_state.get() == 0:
+            self.VerifyNumbers(self.Kerning_Print,"Invalid Kerning Value")
+        if self.SkipItalics_state.get() == 0:
+            self.VerifyNumbers(self.Italics_Print,"Invalid Italics Value")
+        if self.SkipTruncText_state.get() == 0:
+            self.VerifyString(self.TruncText_Print,"Invalid Trunk Text Value")
 
     def GenerateLabelCode(self):
         self.VerificationFail = 0

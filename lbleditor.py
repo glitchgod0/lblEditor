@@ -11,12 +11,14 @@ class GUI:
         #init
         self.Root = tk.Tk()
         self.Root.title("Milo Label Editor")
+        self.ItemBox = tk.Frame(self.Root, bg="Red")
         self.UILabelIsShowing_state = tk.IntVar()
         self.UIMarkup_state = tk.IntVar()
         self.SkipLeading_state = tk.IntVar()
         self.SkipKerning_state = tk.IntVar()
         self.SkipItalics_state = tk.IntVar()
         self.SkipTruncText_state = tk.IntVar()
+        self.SkipHighlight_state = tk.IntVar()
         self.VerificationFail = 0
 
         #the setup for the drop down menu
@@ -92,6 +94,8 @@ class GUI:
         self.HeightDesc = tk.Label(self.Root, text="Height of label")
         self.AlphaDesc = tk.Label(self.Root, text="Controls transparency of label. Value must be between 0 and 1.")
         self.ColorDesc = tk.Label(self.Root, text="Color of the label. Value is R G B and each value must be between 0 and 1\nExample: \"0.60 0.60 1\" would be a Lavender color.")
+        self.ReserveLineDesc = tk.Label(self.Root, text="Preallocated number of lines in internal text object.")
+        self.HighlightMeshDesc = tk.Label(self.Root, text="Whether or not to use highlight mesh (if available)")
 
 
 
@@ -120,13 +124,15 @@ class GUI:
         self.HeightEntry = tk.Entry(self.Root, width=7)
         self.AlphaEntry = tk.Entry(self.Root, width=7)
         self.ColorEntry = tk.Entry(self.Root, width=7)
+        self.ReserveLineEntry = tk.Entry(self.Root, width=7)
+        self.HighlightMeshEntry = tk.Entry(self.Root, width=7)
+        self.SkipHighlight = tk.Checkbutton(self.Root, variable=self.SkipHighlight_state)
 
 
 
 
 
-
-
+        self.SkipHighlight.select()
         self.GroupEntry = tk.Entry(self.Root, width=15)        
 
         #run column 0 objects
@@ -147,8 +153,10 @@ class GUI:
         self.HeightDesc.grid(row=14, column=0, padx=10, pady=10)
         self.AlphaDesc.grid(row=15, column=0, padx=10, pady=10)
         self.ColorDesc.grid(row=16, column=0, padx=10, pady=10)
+        self.ReserveLineDesc.grid(row=17, column=0, padx=10, pady=10)
+        self.HighlightMeshDesc.grid(row=18, column=0, padx=10, pady=10)
 
-        self.GroupDesc.grid(row=17, column=0, padx=10, pady=10)
+        self.GroupDesc.grid(row=19, column=0, padx=10, pady=10)
 
 
 
@@ -172,21 +180,26 @@ class GUI:
         self.HeightEntry.grid(row=14, column=1, padx=10, pady=10)
         self.AlphaEntry.grid(row=15, column=1, padx=10, pady=10)
         self.ColorEntry.grid(row=16, column=1, padx=10, pady=10)
+        self.ReserveLineEntry.grid(row=17, column=1, padx=10, pady=10)
+        self.HighlightMeshEntry.grid(row=18, column=1, padx=10, pady=10)
 
 
-        self.GroupEntry.grid(row=17, column=1, pady=10, padx=10)
+
+        self.GroupEntry.grid(row=19, column=1, pady=10, padx=10)
 
         #run column 2 objects
         self.LabelNameLabel.grid(sticky="w", row=0, column=2, pady=10)
         self.TextSizePercent.grid(sticky="w",row=4, column=2, pady=10)  
-        self.GroupFileTypeLabel.grid(sticky="w",row=17, column=2, pady=10) # .GRP LABEL
+        self.GroupFileTypeLabel.grid(sticky="w",row=19, column=2, pady=10) # .GRP LABEL
         #skipables
         self.SkipLeading.grid(row=8, column=2, padx=10, pady=10)
         self.SkipKerning.grid(row=9, column=2, padx=10, pady=10)
         self.SkipItalics.grid(row=10, column=2, padx=10, pady=10)
         self.SkipTruncText.grid(row=12, column=2, padx=10, pady=10)
+        self.SkipHighlight.grid(row=18, column=2, padx=10, pady=10)
 
         #run the code
+        self.ItemBox.grid(row=0, rowspan=10, columnspan=3, column=0,sticky="NEWS")
         self.Root.mainloop()
 
 
@@ -242,6 +255,8 @@ class GUI:
         self.Height_Print = self.HeightEntry.get()
         self.Alpha_Print = self.AlphaEntry.get()
         self.Color_Print = self.ColorEntry.get()
+        self.ReserveLine_Print = self.ReserveLineEntry.get()
+        self.HighlightMesh_Print = self.HighlightMeshEntry.get()
 
         self.VerifyData(self.UILabelEntry_Print, "Invalid LabelName")
         self.VerifyData(self.text_token_Print, "Invalid Text Token Name")
@@ -259,6 +274,9 @@ class GUI:
         self.VerifyNumbers(self.Height_Print, "Invalid Height Value", 1000)
         self.VerifyNumbers(self.Alpha_Print, "Invalid Alpha Value", 1)
         self.VerifyRGB(self.Color_Print)
+        self.VerifyNumbers(self.ReserveLine_Print, "Invalid Fixed Length Value", 1000)
+        if self.SkipTruncText_state.get() == 0:
+            self.VerifyNumbers(self.HighlightMesh_Print, "Invalid Line Reserve Value", 100)
        
 
         self.VerifyData(self.GroupEntry_Print, "Invalid Group Name")
@@ -289,6 +307,9 @@ class GUI:
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set height {self.HeightEntry.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set alpha {self.AlphaEntry.get()}}}")
             open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set color {{pack_color {self.ColorEntry.get()}}}}}")
+            open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set reserve_lines {self.ColorEntry.get()}}}")
+            if self.SkipHighlight_state.get() == 0:
+                open("lbl_out.dta", "a").write(f"\n{{{self.UILabelEntry.get()}.lbl set use_highlight_mesh {self.ColorEntry.get()}}}")
             
 
             open("lbl_out.dta", "a").write(f"\n{{{self.GroupEntry.get()}.grp add_object {self.UILabelEntry.get()}.lbl}}")
